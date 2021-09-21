@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>/home/rodblch/RiderProjects/Floppy_Bird/Floppy_Bird/Content/File.spritefont</SourceFile>
+  <SourceTime>2021-09-14T17:23:21.4588858+03:00</SourceTime>
+  <DestFile>/home/rodblch/RiderProjects/Floppy_Bird/Floppy_Bird/Content/bin/DesktopGL/Content/File.xnb</DestFile>
+  <DestTime>2021-09-14T17:24:29.1364883+03:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2021-09-13T15:45:22+03:00</ImporterTime>
+  <Processor>LocalizedFontProcessor</Processor>
+  <ProcessorTime>2021-09-13T15:45:22+03:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
