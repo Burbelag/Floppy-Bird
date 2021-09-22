@@ -113,8 +113,8 @@ namespace Floppy_Bird
                 if (_pipeBetweenPosition > 200)
                 {
                     _listUpperDriver.Add(Draw_pipe(_floppyDriverDownPos.X += _pipeBetweenPosition));
-                    _listUpperDriver.Add(Draw_pipe(_floppyDriverUpPos.X += _pipeBetweenPosition, 
-                        _graphicsDeviceManager.PreferredBackBufferHeight));
+                    _listDownDriver.Add(Draw_pipe(_floppyDriverUpPos.X += _pipeBetweenPosition, 
+                        _graphicsDeviceManager.PreferredBackBufferHeight - _floppyDriver.Height * _floppyDriverScale));
                     _pipeBetweenPosition = 0;
                 }
                 _pipeBetweenPosition += 1;
@@ -173,7 +173,14 @@ namespace Floppy_Bird
                     null, Color.White, 0.0f,
                     Vector2.Zero, _floppyDriverScale, SpriteEffects.None, 0.0f);
 */
-                foreach (var drawPipes in _listUpperDriver)
+                foreach (Vector2 drawPipes in _listUpperDriver)
+                {
+                    _spriteBatch.Draw(_floppyDriver, new Rectangle((int) drawPipes.X, (int) drawPipes.Y, 
+                            (int) (_floppyDriver.Width*_floppyDriverScale), (int) (_floppyDriver.Height*_floppyDriverScale)), 
+                        Color.White);
+                }
+
+                foreach (Vector2 drawPipes in _listDownDriver)
                 {
                     _spriteBatch.Draw(_floppyDriver, new Rectangle((int) drawPipes.X, (int) drawPipes.Y, 
                             (int) (_floppyDriver.Width*_floppyDriverScale), (int) (_floppyDriver.Height*_floppyDriverScale)), 
@@ -193,8 +200,6 @@ namespace Floppy_Bird
         private Vector2 Draw_pipe(float driverPosX, float driverPosY)
         {
             driverPosX += _graphicsDeviceManager.PreferredBackBufferWidth;
-            driverPosY += _graphicsDeviceManager.PreferredBackBufferHeight;
-
             return new Vector2(driverPosX, driverPosY);
         }
         
