@@ -9,36 +9,35 @@ namespace Floppy_Bird
     public class Game1 : Game
     {
         GraphicsDeviceManager _graphicsDeviceManager;
-        
+
         private SpriteBatch _spriteBatch;
         private Texture2D _floppy;
         private Texture2D _background;
         private Texture2D _floppyDriver;
-        
-        private Vector2 _floppyPos = new Vector2(200.0f, 2.0f);
-        private Vector2 _floppyDriverDownPos = new Vector2(300, 0f);
-        private Vector2 _floppyDriverUpPos = new Vector2(300, 0f);
-        private Vector2 _driverDownPos0;
-        private Vector2 _driverUpPos0;
-        
+
+        private Vector2 _floppyPos = new(200.0f, 200.0f);
+        private Vector2 _floppyDriverDownPos = new(300, 0f);
+        private Vector2 _floppyDriverUpPos = new(300, 0f);
+
         private Vector3 _gameCamera;
 
         private KeyboardState _oldKeyboardState;
 
-        private List<Vector2> _listUpperDriver = new();
-        private List<Vector2> _listDownDriver = new();
+        private readonly List<Vector2> _listUpperDriver = new();
+        private readonly List<Vector2> _listDownDriver = new();
 
         private float _floppyScale;
-        private float _velocity = 0;
+        private float _velocity;
         private float _acceleration = 0.15f;
-        private  int _pipeBetweenPosition = 0;
+        private int _pipeBetweenPosition = 0;
         private double _screenResolution;
         private float _backgroundScale;
         private float _floppyDriverScale;
         private float _cameraPos = 0;
         private bool _menu = true;
 
-        private const float DefaultXSpeed = 0.8f;
+        private const float DefaultXSpeed = 1.8f;
+
         public Game1()
         {
             IsMouseVisible = false;
@@ -57,10 +56,8 @@ namespace Floppy_Bird
 
             _screenResolution = _graphicsDeviceManager.PreferredBackBufferHeight ^
                                 2 / _graphicsDeviceManager.PreferredBackBufferWidth ^ 2;
-            Math.Sqrt(_screenResolution);
 
             _backgroundScale = _background.Height ^ 2 / _background.Width ^ 2;
-            Math.Sqrt(_backgroundScale);
 
             //end
 
@@ -77,7 +74,7 @@ namespace Floppy_Bird
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
             KeyboardState newState = Keyboard.GetState();
 
             if (_menu)
@@ -85,7 +82,6 @@ namespace Floppy_Bird
                 KeyboardState state = Keyboard.GetState();
 
                 if (state.IsKeyDown(Keys.Space)) _menu = false;
-
             }
             else
             {
@@ -95,43 +91,63 @@ namespace Floppy_Bird
                 }
 
                 /*  COLLISION STUFF */
-                Rectangle floppy = new Rectangle((int) _floppyPos.X, (int) _floppyPos.Y, _floppy.Width, _floppy.Height);
-                Rectangle drive = new Rectangle((int) _driverDownPos0.X, (int) _driverDownPos0.Y,
-                    (int) (_floppyDriver.Width * _floppyDriverScale),
-                    (int) (_floppyDriver.Height * _floppyDriverScale));
-                Rectangle driveUp = new Rectangle((int) _driverUpPos0.X, (int) _driverUpPos0.Y,
-                    (int) (_floppyDriver.Width * _floppyDriverScale),
-                    (int) (_floppyDriver.Height * _floppyDriverScale));
 
-                if (Collision(floppy, drive) || Collision(floppy, driveUp))
-                    Console.WriteLine("AAAAAAAAA");
+                Rectangle floppy = new Rectangle((int) _floppyPos.X, (int) _floppyPos.Y,
+                    (int) (_floppy.Width * _floppyScale),
+                    (int) (_floppy.Height * _floppyScale));
 
-                if (floppy.X < 0 || floppy.X > _graphicsDeviceManager.PreferredBackBufferWidth ||
-                    floppy.Y < 0 || floppy.Y > _graphicsDeviceManager.PreferredBackBufferHeight)
-                    Console.WriteLine("HUY");
+                //        if (_floppyPos.X < 0 || _floppyPos.X > _graphicsDeviceManager.PreferredBackBufferWidth) Console.WriteLine("didthth");
+                if (_floppyPos.Y < 0 || _floppyPos.Y > _graphicsDeviceManager.PreferredBackBufferHeight)
+                    Console.WriteLine("Height");
+                // Rectangle drive = new Rectangle((int) _driverDownPos0.X, (int) _driverDownPos0.Y,
+                //     (int) (_floppyDriver.Width * _floppyDriverScale),
+                //     (int) (_floppyDriver.Height * _floppyDriverScale));
+                // Rectangle driveUp = new Rectangle((int) _driverUpPos0.X, (int) _driverUpPos0.Y,
+                //     (int) (_floppyDriver.Width * _floppyDriverScale),
+                //     (int) (_floppyDriver.Height * _floppyDriverScale));
+
+                foreach (Vector2 pipe in _listUpperDriver)
+                {
+                    if (Collision(floppy, new Rectangle((int) pipe.X, (int) pipe.Y,
+                        (int) (_floppyDriver.Width * _floppyDriverScale),
+                        (int) (_floppyDriver.Height * _floppyDriverScale))))
+                    {
+                        Console.WriteLine("upper pipe is detected !");
+                    }
+                }
+
+                foreach (Vector2 pipe in _listDownDriver)
+                {
+                    if (Collision(floppy, new Rectangle((int) pipe.X, (int) pipe.Y,
+                        (int) (_floppyDriver.Width * _floppyDriverScale),
+                        (int) (_floppyDriver.Height * _floppyDriverScale))))
+                    {
+                        Console.WriteLine("down pipe is detected !");
+                    }
+                }
+
+                //  if (Collision(floppy, drive) || Collision(floppy, driveUp))
+                //      Console.WriteLine("AAAAAAAAA");
+
 
                 if (_pipeBetweenPosition > 200)
                 {
                     _listUpperDriver.Add(Draw_pipe(_floppyDriverDownPos.X += _pipeBetweenPosition));
-                    _listDownDriver.Add(Draw_pipe(_floppyDriverUpPos.X += _pipeBetweenPosition, 
+                    _listDownDriver.Add(Draw_pipe(_floppyDriverUpPos.X += _pipeBetweenPosition,
                         _graphicsDeviceManager.PreferredBackBufferHeight - _floppyDriver.Height * _floppyDriverScale));
                     _pipeBetweenPosition = 0;
                 }
-                _pipeBetweenPosition += 1;
 
-                _driverDownPos0 = new Vector2(200,
-                    _graphicsDeviceManager.PreferredBackBufferHeight - _floppyDriver.Height * _floppyDriverScale);
-                _driverUpPos0 = new Vector2(200, 0);
+                _pipeBetweenPosition += 2;
 
                 _oldKeyboardState = newState;
                 _velocity += _acceleration;
                 _floppyPos.Y += _velocity;
                 _floppyPos.X += DefaultXSpeed;
-        
                 
-                _gameCamera = new Vector3(_cameraPos -=DefaultXSpeed, 0, 0.0f);
-
+                _gameCamera = new Vector3(_cameraPos -= DefaultXSpeed, 0, 0.0f);
             }
+
             base.Update(gameTime);
         }
 
@@ -150,7 +166,7 @@ namespace Floppy_Bird
             if (_menu)
             {
                 _spriteBatch.Begin();
-                _spriteBatch.Draw(_floppy,new Rectangle(_graphicsDeviceManager.PreferredBackBufferWidth / 2, 
+                _spriteBatch.Draw(_floppy, new Rectangle(_graphicsDeviceManager.PreferredBackBufferWidth / 2,
                     _graphicsDeviceManager.PreferredBackBufferHeight / 2, _floppy.Width, _floppy.Height), Color.White);
                 _spriteBatch.End();
             }
@@ -158,7 +174,7 @@ namespace Floppy_Bird
             {
                 _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
                     null, null, null, Matrix.CreateTranslation(_gameCamera));
-               
+
                 _spriteBatch.Draw(_floppy, _floppyPos,
                     null, Color.White, 0.0f,
                     Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
@@ -175,19 +191,23 @@ namespace Floppy_Bird
 */
                 foreach (Vector2 drawPipes in _listUpperDriver)
                 {
-                    _spriteBatch.Draw(_floppyDriver, new Rectangle((int) drawPipes.X, (int) drawPipes.Y, 
-                            (int) (_floppyDriver.Width*_floppyDriverScale), (int) (_floppyDriver.Height*_floppyDriverScale)), 
+                    _spriteBatch.Draw(_floppyDriver, new Rectangle((int) drawPipes.X, (int) drawPipes.Y,
+                            (int) (_floppyDriver.Width * _floppyDriverScale),
+                            (int) (_floppyDriver.Height * _floppyDriverScale)),
                         Color.White);
                 }
 
                 foreach (Vector2 drawPipes in _listDownDriver)
                 {
-                    _spriteBatch.Draw(_floppyDriver, new Rectangle((int) drawPipes.X, (int) drawPipes.Y, 
-                            (int) (_floppyDriver.Width*_floppyDriverScale), (int) (_floppyDriver.Height*_floppyDriverScale)), 
+                    _spriteBatch.Draw(_floppyDriver, new Rectangle((int) drawPipes.X, (int) drawPipes.Y,
+                            (int) (_floppyDriver.Width * _floppyDriverScale),
+                            (int) (_floppyDriver.Height * _floppyDriverScale)),
                         Color.White);
                 }
+
                 _spriteBatch.End();
             }
+
             base.Draw(gameTime);
         }
 
@@ -202,7 +222,7 @@ namespace Floppy_Bird
             driverPosX += _graphicsDeviceManager.PreferredBackBufferWidth;
             return new Vector2(driverPosX, driverPosY);
         }
-        
+
 
         private static bool Collision(Rectangle a, Rectangle b)
         {
@@ -211,6 +231,5 @@ namespace Floppy_Bird
                    a.Y < b.Y + b.Height &&
                    a.Y + a.Height > b.Y;
         }
-
     }
 }
