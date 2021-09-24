@@ -106,11 +106,18 @@ namespace Floppy_Bird
                 //     (int) (_floppyDriver.Width * _floppyDriverScale),
                 //     (int) (_floppyDriver.Height * _floppyDriverScale));
 
+
                 foreach (Vector2 pipe in _listUpperDriver)
                 {
-                    if (Collision(floppy, new Rectangle((int) pipe.X, (int) pipe.Y,
+                    //неправильно расчитывается верхняя труба
+                    //надо расстояние от 0 до _floppyDriver.Width
+                    //например 0 - 150
+                    //госпаде я такой тупой
+                    float floppyDriverScaleCollision = pipe.Y * 2 + _floppyDriver.Width * _floppyDriverScale;
+
+                    if (Collision(floppy, new Rectangle((int) pipe.X, 0,
                         (int) (_floppyDriver.Width * _floppyDriverScale),
-                        (int) (_floppyDriver.Height * _floppyDriverScale))))
+                        (int) (floppyDriverScaleCollision))))
                     {
                         Console.WriteLine("upper pipe is detected !");
                     }
@@ -118,23 +125,29 @@ namespace Floppy_Bird
 
                 foreach (Vector2 pipe in _listDownDriver)
                 {
+                    float floppyDriverScaleCollision = pipe.Y * 2 + _floppyDriver.Height;
                     if (Collision(floppy, new Rectangle((int) pipe.X, (int) pipe.Y,
                         (int) (_floppyDriver.Width * _floppyDriverScale),
-                        (int) (_floppyDriver.Height * _floppyDriverScale))))
+                        (int) (floppyDriverScaleCollision * _floppyDriverScale))))
                     {
                         Console.WriteLine("down pipe is detected !");
                     }
                 }
 
-                //  if (Collision(floppy, drive) || Collision(floppy, driveUp))
-                //      Console.WriteLine("AAAAAAAAA");
-
-
                 if (_pipeBetweenPosition > 200)
                 {
-                    _listUpperDriver.Add(Draw_pipe(_floppyDriverDownPos.X += _pipeBetweenPosition));
+                    Random random = new Random();
+                    float randDriverPosY = random.Next(0,
+                        _graphicsDeviceManager.PreferredBackBufferHeight / 4);
+
+                    _listUpperDriver.Add(Draw_pipe(_floppyDriverDownPos.X += _pipeBetweenPosition,
+                        randDriverPosY));
+
+                    //select x4 floppys height space
+                    float spaceForFloppy = randDriverPosY + _floppy.Height * 4;
+
                     _listDownDriver.Add(Draw_pipe(_floppyDriverUpPos.X += _pipeBetweenPosition,
-                        _graphicsDeviceManager.PreferredBackBufferHeight - _floppyDriver.Height * _floppyDriverScale));
+                        spaceForFloppy + _floppyDriver.Height * _floppyDriverScale));
                     _pipeBetweenPosition = 0;
                 }
 
@@ -144,7 +157,7 @@ namespace Floppy_Bird
                 _velocity += _acceleration;
                 _floppyPos.Y += _velocity;
                 _floppyPos.X += DefaultXSpeed;
-                
+
                 _gameCamera = new Vector3(_cameraPos -= DefaultXSpeed, 0, 0.0f);
             }
 
@@ -179,16 +192,6 @@ namespace Floppy_Bird
                     null, Color.White, 0.0f,
                     Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
 
-/*
-                _spriteBatch.Draw(_floppy_driver, _driverDownPos0,
-                    null, Color.White, 0.0f,
-                    Vector2.Zero, _floppyDriverScale, SpriteEffects.None, 0.0f);
-
-                _spriteBatch.Draw(_floppy_driver, driverRect, Color.White);
-                _spriteBatch.Draw(_floppy_driver, _driverUpPos0,
-                    null, Color.White, 0.0f,
-                    Vector2.Zero, _floppyDriverScale, SpriteEffects.None, 0.0f);
-*/
                 foreach (Vector2 drawPipes in _listUpperDriver)
                 {
                     _spriteBatch.Draw(_floppyDriver, new Rectangle((int) drawPipes.X, (int) drawPipes.Y,
