@@ -6,16 +6,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Floppy_Bird
 {
+
+
     public class Game1 : Game
     {
         GraphicsDeviceManager _graphicsDeviceManager;
 
         private SpriteBatch _spriteBatch;
-        private Texture2D _floppy;
         private Texture2D _background;
         private Texture2D _floppyDriver;
 
-        private Vector2 _floppyPos = new(200.0f, 200.0f);
+//        
         private Vector2 _floppyDriverDownPos = new(300, 0f);
         private Vector2 _floppyDriverUpPos = new(300, 0f);
 
@@ -26,15 +27,15 @@ namespace Floppy_Bird
         private readonly List<Vector2> _listUpperDriver = new();
         private readonly List<Vector2> _listDownDriver = new();
 
-        private float _floppyScale;
-        private float _velocity;
-        private float _acceleration = 0.15f;
+
+
         private int _pipeBetweenPosition = 0;
         private double _screenResolution;
         private float _backgroundScale;
         private float _floppyDriverScale;
         private float _cameraPos = 0;
         private bool _menu = true;
+        private readonly Floppy _floppy;
 
         private const float DefaultXSpeed = 1.8f;
 
@@ -43,21 +44,23 @@ namespace Floppy_Bird
             IsMouseVisible = false;
             _graphicsDeviceManager = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            _floppy = new Floppy();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _floppy = Content.Load<Texture2D>("floppy");
-            _background = Content.Load<Texture2D>("background");
-            _floppyDriver = Content.Load<Texture2D>("floppy_driver");
+            //_floppy._floppy = Content.Load<Texture2D>("floppy");
+            //_background = Content.Load<Texture2D>("background");
+            Scales scales = new Scales(_graphicsDeviceManager);
+            //_floppyDriver = Content.Load<Texture2D>("floppy_driver");
 
             //нахождение как скалировать через теоремы пифагора
 
-            _screenResolution = _graphicsDeviceManager.PreferredBackBufferHeight ^
-                                2 / _graphicsDeviceManager.PreferredBackBufferWidth ^ 2;
+            //_screenResolution = _graphicsDeviceManager.PreferredBackBufferHeight ^
+            //                    2 / _graphicsDeviceManager.PreferredBackBufferWidth ^ 2;
 
-            _backgroundScale = _background.Height ^ 2 / _background.Width ^ 2;
+            //_backgroundScale = _background.Height ^ 2 / _background.Width ^ 2;
 
             //end
 
@@ -65,8 +68,8 @@ namespace Floppy_Bird
 
             //Скейл драйвера в 2 раза меньше, вроде нормально
 
-            _floppyDriverScale = _backgroundScale / 2;
-            _floppyScale = (float) (_backgroundScale * 1.5);
+            //_floppyDriverScale = _backgroundScale / 2;
+            //_floppyScale = (float) (_backgroundScale * 1.5);
         }
 
         protected override void Update(GameTime gameTime)
@@ -93,8 +96,8 @@ namespace Floppy_Bird
                 /*  COLLISION STUFF */
 
                 Rectangle floppy = new Rectangle((int) _floppyPos.X, (int) _floppyPos.Y,
-                    (int) (_floppy.Width * _floppyScale),
-                    (int) (_floppy.Height * _floppyScale));
+                    (int) (_floppy._floppy.Width * _floppyScale),
+                    (int) (_floppy._floppy.Height * _floppyScale));
 
                 //        if (_floppyPos.X < 0 || _floppyPos.X > _graphicsDeviceManager.PreferredBackBufferWidth) Console.WriteLine("didthth");
                 if (_floppyPos.Y < 0 || _floppyPos.Y > _graphicsDeviceManager.PreferredBackBufferHeight)
@@ -144,7 +147,7 @@ namespace Floppy_Bird
                         randDriverPosY));
 
                     //select x4 floppys height space
-                    float spaceForFloppy = randDriverPosY + _floppy.Height * 4;
+                    float spaceForFloppy = randDriverPosY + _floppy._floppy.Height * 4;
 
                     _listDownDriver.Add(Draw_pipe(_floppyDriverUpPos.X += _pipeBetweenPosition,
                         spaceForFloppy + _floppyDriver.Height * _floppyDriverScale));
@@ -154,9 +157,9 @@ namespace Floppy_Bird
                 _pipeBetweenPosition += 2;
 
                 _oldKeyboardState = newState;
-                _velocity += _acceleration;
-                _floppyPos.Y += _velocity;
-                _floppyPos.X += DefaultXSpeed;
+                //_velocity += _acceleration;
+                //_floppyPos.Y += _velocity;
+                //_floppyPos.X += DefaultXSpeed;
 
                 _gameCamera = new Vector3(_cameraPos -= DefaultXSpeed, 0, 0.0f);
             }
@@ -180,7 +183,7 @@ namespace Floppy_Bird
             {
                 _spriteBatch.Begin();
                 _spriteBatch.Draw(_floppy, new Rectangle(_graphicsDeviceManager.PreferredBackBufferWidth / 2,
-                    _graphicsDeviceManager.PreferredBackBufferHeight / 2, _floppy.Width, _floppy.Height), Color.White);
+                    _graphicsDeviceManager.PreferredBackBufferHeight / 2, _floppy._floppy.Width, _floppy._floppy.Height), Color.White);
                 _spriteBatch.End();
             }
             else
@@ -188,9 +191,9 @@ namespace Floppy_Bird
                 _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
                     null, null, null, Matrix.CreateTranslation(_gameCamera));
 
-                _spriteBatch.Draw(_floppy, _floppyPos,
-                    null, Color.White, 0.0f,
-                    Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
+            //    _spriteBatch.Draw(_floppy._floppy, _floppyPos,
+            //        null, Color.White, 0.0f,
+            //        Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
 
                 foreach (Vector2 drawPipes in _listUpperDriver)
                 {
@@ -207,7 +210,7 @@ namespace Floppy_Bird
                             (int) (_floppyDriver.Height * _floppyDriverScale)),
                         Color.White);
                 }
-
+                
                 _spriteBatch.End();
             }
 
