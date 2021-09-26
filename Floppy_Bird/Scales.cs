@@ -1,27 +1,37 @@
+using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Floppy_Bird
 {
-    public class Scales
+    public static class Scales
     {
-        private Floppy _floppyScale = new Floppy();
-        private Background _backgroundScale = new Background(contentManager);
-
-        public Scales(GraphicsDeviceManager graphicsDeviceManager)
+        public enum ScaleObject
         {
-            
-            float screenResolution = graphicsDeviceManager.PreferredBackBufferHeight ^
-                                2 / graphicsDeviceManager.PreferredBackBufferWidth ^ 2;
-
-            float backgroundScale = _backgroundScale.Height ^ 2 / _backgroundScale.Width ^ 2;
-
-            //end
-
-            backgroundScale = (float) (screenResolution / backgroundScale);
-
-            _driverScale = backgroundScale / 2;
-            _floppyScale = (float) (_backgroundScale * 1.5));
+            Background,
+            Floppy,
+            Driver
         }
+        public static float Scale(GraphicsDevice graphicsDevice, Rectangle obj, ScaleObject scaleObject)
+        {
+            float screenResolution = graphicsDevice.Adapter.CurrentDisplayMode.Height ^ 2 /
+                graphicsDevice.Adapter.CurrentDisplayMode.Width ^ 2;
+            float answer = obj.Height ^ 2 / obj.Width;
 
+            answer = screenResolution / answer;
+            switch (scaleObject)
+            {
+                case ScaleObject.Background :
+                    return answer;
+                case ScaleObject.Floppy :
+                    answer = (float) (answer * 1.5);
+                    return answer;
+                case ScaleObject.Driver :
+                    answer = answer / 2;
+                    return answer;
+            }
+
+            throw new InvalidOperationException();
+        }
     }
 }
