@@ -147,7 +147,11 @@ namespace Floppy_Bird
                         randDriverPosY));
 
                     //select x4 floppys height space
+<<<<<<< HEAD
+                    float spaceForFloppy = randDriverPosY + _floppy.Height * 4;
+=======
                     float spaceForFloppy = randDriverPosY + _floppy._floppy.Height * 4;
+>>>>>>> 369bd3566b25f9683e1f8b6e67cf9a6f645900e8
 
                     _listDownDriver.Add(Draw_pipe(_floppyDriverUpPos.X += _pipeBetweenPosition,
                         spaceForFloppy + _floppyDriver.Height * _floppyDriverScale));
@@ -157,9 +161,15 @@ namespace Floppy_Bird
                 _pipeBetweenPosition += 2;
 
                 _oldKeyboardState = newState;
+<<<<<<< HEAD
+                _velocity += _acceleration;
+                _floppyPos.Y += _velocity;
+                _floppyPos.X += DefaultXSpeed;
+=======
                 //_velocity += _acceleration;
                 //_floppyPos.Y += _velocity;
                 //_floppyPos.X += DefaultXSpeed;
+>>>>>>> 369bd3566b25f9683e1f8b6e67cf9a6f645900e8
 
                 _gameCamera = new Vector3(_cameraPos -= DefaultXSpeed, 0, 0.0f);
             }
@@ -191,9 +201,15 @@ namespace Floppy_Bird
                 _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
                     null, null, null, Matrix.CreateTranslation(_gameCamera));
 
+<<<<<<< HEAD
+                _spriteBatch.Draw(_floppy, _floppyPos,
+                    null, Color.White, 0.0f,
+                    Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
+=======
             //    _spriteBatch.Draw(_floppy._floppy, _floppyPos,
             //        null, Color.White, 0.0f,
             //        Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
+>>>>>>> 369bd3566b25f9683e1f8b6e67cf9a6f645900e8
 
                 foreach (Vector2 drawPipes in _listUpperDriver)
                 {
