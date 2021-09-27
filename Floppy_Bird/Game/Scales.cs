@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Floppy_Bird
+namespace Floppy_Bird.Game
 {
     public static class Scales
     {
@@ -12,7 +12,7 @@ namespace Floppy_Bird
             Floppy,
             Driver
         }
-        public static float Scale(GraphicsDevice graphicsDevice, Rectangle obj, ScaleObject scaleObject)
+        public static float Scale(GraphicsDevice graphicsDevice, Texture2D obj, ScaleObject scaleObject)
         {
             float screenResolution = graphicsDevice.Adapter.CurrentDisplayMode.Height ^ 2 /
                 graphicsDevice.Adapter.CurrentDisplayMode.Width ^ 2;

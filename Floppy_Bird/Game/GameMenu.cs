@@ -1,4 +1,4 @@
-namespace Floppy_Bird
+namespace Floppy_Bird.Game
 {
     public class GameMenu
     {
