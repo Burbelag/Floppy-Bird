@@ -1,4 +1,0 @@
-Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"/home/rodblch/RiderProjects/FloppyBird/FloppyBird/Content/background.png","/home/rodblch/RiderProjects/FloppyBird/FloppyBird/Content/bin/DesktopGL/Content/background.xnb","TextureProcessor","Texture2DContent",14767,3686485,1.0618749
-"/home/rodblch/RiderProjects/FloppyBird/FloppyBird/Content/disk-1.png","/home/rodblch/RiderProjects/FloppyBird/FloppyBird/Content/bin/DesktopGL/Content/floppy.xnb","TextureProcessor","Texture2DContent",284,4181,0.0049602
-"/home/rodblch/RiderProjects/FloppyBird/FloppyBird/Content/floppy_driver.png","/home/rodblch/RiderProjects/FloppyBird/FloppyBird/Content/bin/DesktopGL/Content/floppy_driver.xnb","TextureProcessor","Texture2DContent",1985,262229,0.0361964
