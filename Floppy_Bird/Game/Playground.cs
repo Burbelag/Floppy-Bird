@@ -22,9 +22,6 @@ namespace Floppy_Bird.Game
         private const float DefaultXSpeed = 1.8f;
 
         private Vector3 _gameCamera;
-        public Playground(ContentManager contentManager)
-        {
-        }
 
         public override void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
@@ -33,7 +30,7 @@ namespace Floppy_Bird.Game
             _driver = new Driver(contentManager, graphicsDevice);
             _graphicsDevice = graphicsDevice;
             _contentManager = contentManager;
-            //maybe bug this
+            
             base.LoadContent(contentManager);
         }
 
