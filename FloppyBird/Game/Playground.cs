@@ -9,9 +9,9 @@ namespace FloppyBird.Game
 {
     public class Playground : Sprite
     {
-        static private Floppy _floppy;
-        static private Driver _driver;
-        static private Background _background;
+         private Floppy _floppy;
+         private Driver _driver;
+         private Background _background;
 
         private ContentManager _contentManager;
         private GraphicsDevice _graphicsDevice;
@@ -20,7 +20,6 @@ namespace FloppyBird.Game
         private KeyboardState _oldKeyboardState;
 
         private const float DefaultXSpeed = 1.8f;
-        public static Vector2 FloppyPos;
 
         private Vector3 _gameCamera;
         private Rectangle _floppyRectangle;
@@ -30,17 +29,14 @@ namespace FloppyBird.Game
             _graphicsDevice = graphicsDevice;
             _contentManager = contentManager;
             
-            FloppyPos = new(200.0f, 200.0f);
-
- 
         }
 
         public override void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
+
             _background = new Background(contentManager, graphicsDevice);
             _floppy = new Floppy(contentManager, graphicsDevice);
             _driver = new Driver(contentManager, graphicsDevice);
-
 
             base.LoadContent(contentManager, graphicsDevice);
         }
@@ -56,11 +52,11 @@ namespace FloppyBird.Game
         {
             KeyboardState newState = Keyboard.GetState();
 
-            _floppyRectangle = new Rectangle((int) FloppyPos.X, (int) FloppyPos.Y,
+            _floppyRectangle = new Rectangle((int) _floppy.Position.X, (int) _floppy.Position.Y,
                 (int) (_floppy.FloppyTexture.Width * _floppy.FloppyScale),
                 (int) (_floppy.FloppyTexture.Height * _floppy.FloppyScale));
             
-            if (FloppyPos.Y < 0 || FloppyPos.Y > _graphicsDevice.Adapter.CurrentDisplayMode.Height)
+            if (_floppy.Position.Y < 0 || _floppy.Position.Y > _graphicsDevice.Adapter.CurrentDisplayMode.Height)
                 Console.WriteLine("Height collision");
 
             _oldKeyboardState = newState;

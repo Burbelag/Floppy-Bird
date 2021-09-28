@@ -17,6 +17,8 @@ namespace FloppyBird.Game
 
         private GraphicsDevice _graphicsDevice;
 
+        /* позицию задаешь здесь и получать в playground через _floppy.Position... */
+        public Vector2 Position { get; set; }
 
         public Floppy(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
@@ -25,19 +27,16 @@ namespace FloppyBird.Game
 
             Scales.ScaleObject scale = Scales.ScaleObject.Floppy;
             FloppyScale = Scales.Scale(_graphicsDevice, FloppyTexture, scale);
+            
+            /* задаешь новые значения и далее работаешь с ними */
+            Position = new Vector2(300.0f, 300.0f);
         }
 
         public override void Update(GameTime gameTime)
         {
-            Rectangle floppy = new Rectangle((int) Playground.FloppyPos.X, (int) Playground.FloppyPos.Y,
-                (int) (FloppyTexture.Width * FloppyScale),
-                (int) (FloppyTexture.Height * FloppyScale));
             //should in 'b' be drivers(pipes)
-            if (Collision(floppy, new Rectangle()))
-            {
-            }
             Move();
-            FloppyScreenCollision(_graphicsDevice);
+            
             base.Update(gameTime);
         }
 
@@ -46,15 +45,9 @@ namespace FloppyBird.Game
             return base.Collision(a, b);
         }
 
-        private void FloppyScreenCollision(GraphicsDevice graphicsDevice)
-        {
-            if (Playground.FloppyPos.Y < 0 || Playground.FloppyPos.Y > graphicsDevice.Adapter.CurrentDisplayMode.Height)
-                Console.WriteLine("Height");
-        }
-
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(FloppyTexture, Playground.FloppyPos,
+            spriteBatch.Draw(FloppyTexture, Position,
                 null, Color.White, 0.0f,
                 Vector2.Zero, FloppyScale, SpriteEffects.None, 0.0f);
             base.Draw(spriteBatch);
@@ -63,8 +56,8 @@ namespace FloppyBird.Game
         public void Move()
         {
             _velocity += _acceleration;
-            Playground.FloppyPos.Y += _velocity;
-            Playground.FloppyPos.X += DefaultXSpeed;
+            //Position.Y += _velocity;
+            //Position.X += DefaultXSpeed;
         }
     }
 }
