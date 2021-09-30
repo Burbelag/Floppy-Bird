@@ -1,5 +1,6 @@
 ﻿using System;
 using Floppy_Bird.Game;
+using FloppyBird.Game;
 
 namespace FloppyBird
 {

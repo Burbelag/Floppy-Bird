@@ -1,63 +1,84 @@
 using System;
-using Floppy_Bird.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace FloppyBird.Game
 {
-    public class Floppy : Sprite
+    public class Floppy
     {
-        public Texture2D FloppyTexture { get; set; }
-        public readonly float FloppyScale;
-        private float _velocity;
+        private readonly Texture2D _floppyTexture;
+        private float _floppyScale;
+        private Vector2 _position;
+
+        /* MOVEMENT */
         private readonly float _acceleration = 0.15f;
+        private float _velocity;
 
-        private const float DefaultXSpeed = 1.8f;
+        public Rectangle FloppyRectangle;
 
-        private GraphicsDevice _graphicsDevice;
+        private readonly GraphicsDevice _graphicsDevice;
 
-        /* позицию задаешь здесь и получать в playground через _floppy.Position... */
-        public Vector2 Position { get; set; }
+        private KeyboardState _oldState;
 
+        private int TEMPCOUNTER = 0;
         public Floppy(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
-            FloppyTexture = contentManager.Load<Texture2D>("floppy");
+            _floppyTexture = contentManager.Load<Texture2D>("floppy");
             _graphicsDevice = graphicsDevice;
 
-            Scales.ScaleObject scale = Scales.ScaleObject.Floppy;
-            FloppyScale = Scales.Scale(_graphicsDevice, FloppyTexture, scale);
-            
-            /* задаешь новые значения и далее работаешь с ними */
-            Position = new Vector2(300.0f, 300.0f);
+            _position = new Vector2(300.0f,graphicsDevice.Adapter.CurrentDisplayMode.Height / 2);
+
+            _floppyScale = GetFloppyScale(graphicsDevice);
+
+            FloppyRectangle = new Rectangle((int) _position.X, (int) _position.Y,
+                (int) (_floppyTexture.Width * _floppyScale),
+                (int) (_floppyTexture.Height * _floppyScale));
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
-            //should in 'b' be drivers(pipes)
+            HeightCollision();
+            Jump();
             Move();
-            
-            base.Update(gameTime);
         }
 
-        public override bool Collision(Rectangle a, Rectangle b)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            return base.Collision(a, b);
+            spriteBatch.Draw(_floppyTexture, _position, null, Color.White, 0.0f,
+                Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        private void Jump()
         {
-            spriteBatch.Draw(FloppyTexture, Position,
-                null, Color.White, 0.0f,
-                Vector2.Zero, FloppyScale, SpriteEffects.None, 0.0f);
-            base.Draw(spriteBatch);
+            KeyboardState newState = Keyboard.GetState();
+
+            if (_oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space))
+            {
+                _velocity = -5f;
+            }
+
+            _oldState = newState;
         }
 
-        public void Move()
+        private void Move()
         {
             _velocity += _acceleration;
-            //Position.Y += _velocity;
-            //Position.X += DefaultXSpeed;
+            _position.Y += _velocity;
+            _position.X += Helpers.DefaultXSpeed;
+        }
+
+        private void HeightCollision()
+        {
+            if (_position.Y < 0 || _position.Y > _graphicsDevice.Adapter.CurrentDisplayMode.Height)
+                Console.WriteLine("Height collision" + TEMPCOUNTER++);
+        }
+
+        protected float GetFloppyScale(GraphicsDevice graphicsDevice)
+        {
+            Helpers.ScaleObject scale = Helpers.ScaleObject.Floppy;
+            return _floppyScale = Helpers.Scale(graphicsDevice, _floppyTexture, scale);
         }
     }
 }
