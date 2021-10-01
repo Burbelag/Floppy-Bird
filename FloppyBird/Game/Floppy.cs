@@ -22,7 +22,6 @@ namespace FloppyBird.Game
 
         private KeyboardState _oldState;
 
-        private int TEMPCOUNTER = 0;
 
         public Floppy(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
@@ -77,7 +76,7 @@ namespace FloppyBird.Game
         private void HeightCollision()
         {
             if (_position.Y < 0 || _position.Y > _graphicsDevice.Adapter.CurrentDisplayMode.Height)
-                Console.WriteLine("Height collision" + TEMPCOUNTER++);
+                Console.WriteLine("Height collision");
         }
 
         protected float GetFloppyScale(GraphicsDevice graphicsDevice)

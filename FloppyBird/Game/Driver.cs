@@ -60,17 +60,19 @@ namespace FloppyBird.Game
             {
                 Random random = new Random();
 
-                float driverPosY = random.Next(0, graphicsDevice.Adapter.CurrentDisplayMode.Height / 4);
-
+                float targetHeight = random.Next(0, graphicsDevice.Adapter.CurrentDisplayMode.Height / 4);
+                
+                
                 _listUpperDriver.Add(Add_Pipe((int) (_floppyDriverDownPos.X += _pipeBetweenPosition),
-                    (int) driverPosY, _driverTexture.Width, _driverTexture.Height));
+                    0, _driverTexture.Width, (int) (_driverTexture.Height + targetHeight)));
 
                 /* SPACE FOR X4 FLOPPYS HEIGHT*/
 
-                float spaceForFloppy = floppy.Height * 4 + driverPosY +
+                float spaceForFloppy = floppy.Height * 4 + targetHeight +
                                        _driverTexture.Height * GetDriverScale(graphicsDevice);
+                
                 _listDownDriver.Add(Add_Pipe((int) (_floppyDriverUpPos.X += _pipeBetweenPosition),
-                    (int) spaceForFloppy, _driverTexture.Width, _driverTexture.Height));
+                    (int) spaceForFloppy, _driverTexture.Width, _graphicsDevice.Adapter.CurrentDisplayMode.Height));
 
                 _pipeBetweenPosition = 0;
             }
