@@ -23,25 +23,30 @@ namespace FloppyBird.Game
         private KeyboardState _oldState;
 
         private int TEMPCOUNTER = 0;
+
         public Floppy(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _floppyTexture = contentManager.Load<Texture2D>("floppy");
             _graphicsDevice = graphicsDevice;
 
-            _position = new Vector2(300.0f,graphicsDevice.Adapter.CurrentDisplayMode.Height / 2);
+            _position = new Vector2(300.0f, graphicsDevice.Adapter.CurrentDisplayMode.Height / 2);
 
             _floppyScale = GetFloppyScale(graphicsDevice);
-
-            FloppyRectangle = new Rectangle((int) _position.X, (int) _position.Y,
-                (int) (_floppyTexture.Width * _floppyScale),
-                (int) (_floppyTexture.Height * _floppyScale));
         }
 
         public void Update(GameTime gameTime)
         {
+            FRectangle();
             HeightCollision();
             Jump();
             Move();
+        }
+
+        private void FRectangle()
+        {
+            FloppyRectangle = new Rectangle((int) _position.X, (int) _position.Y,
+                (int) (_floppyTexture.Width * _floppyScale),
+                (int) (_floppyTexture.Height * _floppyScale));
         }
 
         public void Draw(SpriteBatch spriteBatch)

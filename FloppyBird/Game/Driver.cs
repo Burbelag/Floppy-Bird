@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Floppy_Bird.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,10 +8,11 @@ namespace FloppyBird.Game
 {
     public class Driver
     {
-        private readonly Texture2D DriverTexture;
+        private readonly Texture2D _driverTexture;
 
-        private readonly List<Vector2> _listUpperDriver = new();
-        private readonly List<Vector2> _listDownDriver = new();
+        private readonly List<Rectangle> _listUpperDriver = new();
+        private readonly List<Rectangle> _listDownDriver = new();
+
         private Vector2 _floppyDriverDownPos = new(300, 0f);
         private Vector2 _floppyDriverUpPos = new(300, 0f);
 
@@ -24,98 +23,80 @@ namespace FloppyBird.Game
 
         public Driver(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
-            DriverTexture = contentManager.Load<Texture2D>("floppy_driver");
+            _driverTexture = contentManager.Load<Texture2D>("floppy_driver");
             _graphicsDevice = graphicsDevice;
             _driverScale = GetDriverScale(_graphicsDevice);
         }
 
         public void Update(GameTime gameTime)
         {
-            PipeGeneration(_graphicsDevice);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Vector2 drawPipes in _listUpperDriver)
+            foreach (Rectangle drawPipes in _listUpperDriver)
             {
-                spriteBatch.Draw(DriverTexture, new Rectangle((int) drawPipes.X, (int) drawPipes.Y,
-                        (int) (DriverTexture.Width * _driverScale),
-                        (int) (DriverTexture.Height * _driverScale)),
-                    Color.White);
+                spriteBatch.Draw(_driverTexture, drawPipes, Color.White);
             }
 
-            foreach (Vector2 drawPipes in _listDownDriver)
+            foreach (Rectangle drawPipes in _listDownDriver)
             {
-                spriteBatch.Draw(DriverTexture, new Rectangle((int) drawPipes.X, (int) drawPipes.Y,
-                        (int) (DriverTexture.Width * _driverScale),
-                        (int) (DriverTexture.Height * _driverScale)),
-                    Color.White);
+                spriteBatch.Draw(_driverTexture, drawPipes, Color.White);
             }
         }
 
+        private Rectangle Add_Pipe(int driverPosX, int driverPosY, int driverWidth, int driverHeight)
+        {
+            if (driverHeight <= 0) throw new ArgumentOutOfRangeException(nameof(driverHeight));
+            driverPosX += _graphicsDevice.Adapter.CurrentDisplayMode.Width;
+            driverWidth = (int) (driverWidth * _driverScale);
+            driverHeight = (int) (driverHeight * _driverScale);
+            return new Rectangle(driverPosX, driverPosY, driverWidth, driverHeight);
+        }
 
-        private void PipeGeneration(GraphicsDevice graphicsDevice)
+        public void PipeGeneration(GraphicsDevice graphicsDevice, Rectangle floppy)
         {
             if (_pipeBetweenPosition > 200)
             {
                 Random random = new Random();
 
-                float driverPosY = random.Next(graphicsDevice.Adapter.CurrentDisplayMode.Height / 3);
-                
-                _listUpperDriver.Add(Add_Pipe(_floppyDriverDownPos.X += _pipeBetweenPosition,
-                    driverPosY));
+                float driverPosY = random.Next(0, graphicsDevice.Adapter.CurrentDisplayMode.Height / 4);
 
-                //select x4 floppys height space
-                // 150 - is COSTIL'
+                _listUpperDriver.Add(Add_Pipe((int) (_floppyDriverDownPos.X += _pipeBetweenPosition),
+                    (int) driverPosY, _driverTexture.Width, _driverTexture.Height));
 
-                float spaceForFloppy = 150 + driverPosY;
+                /* SPACE FOR X4 FLOPPYS HEIGHT*/
 
-                _listDownDriver.Add(Add_Pipe(_floppyDriverUpPos.X += _pipeBetweenPosition,
-                    spaceForFloppy + DriverTexture.Height * _driverScale));
-    
+                float spaceForFloppy = floppy.Height * 4 + driverPosY +
+                                       _driverTexture.Height * GetDriverScale(graphicsDevice);
+                _listDownDriver.Add(Add_Pipe((int) (_floppyDriverUpPos.X += _pipeBetweenPosition),
+                    (int) spaceForFloppy, _driverTexture.Width, _driverTexture.Height));
+
                 _pipeBetweenPosition = 0;
             }
 
             _pipeBetweenPosition += 2;
         }
 
-        private Vector2 Add_Pipe(float driverPosX, float driverPosY)
-        {
-            driverPosX += _graphicsDevice.Adapter.CurrentDisplayMode.Width;
-            return new Vector2(driverPosX, driverPosY);
-        }
-
-        protected float GetDriverScale(GraphicsDevice graphicsDevice)
+        private float GetDriverScale(GraphicsDevice graphicsDevice)
         {
             Helpers.ScaleObject scale = Helpers.ScaleObject.Driver;
-            return _driverScale = Helpers.Scale(graphicsDevice, DriverTexture, scale);
+            return _driverScale = Helpers.Scale(graphicsDevice, _driverTexture, scale);
         }
 
-        
-        //bug : Collision won't detected.
         public void DriverCollision(Rectangle floppy)
         {
-            foreach (Vector2 pipe in _listUpperDriver)
+            foreach (Rectangle driverRectangle in _listUpperDriver)
             {
-                //неправильно расчитывается верхняя труба
-                //надо расстояние от 0 до _floppyDriver.Width
-                //например 0 - 150
-                //госпаде я такой тупой 
-
-                if (Helpers.Collision(floppy, new Rectangle((int) pipe.X, (int) pipe.Y,
-                    (int) (DriverTexture.Width * _driverScale),
-                    (int) (DriverTexture.Height * _driverScale))))
+                if (Helpers.Collision(floppy, driverRectangle))
                 {
                     Console.WriteLine("upper pipe is detected !");
                 }
             }
 
-            int tempY = 150;
-            foreach (var pipe in _listDownDriver)
+            foreach (var driverRectangle in _listDownDriver)
             {
-                if (Helpers.Collision(floppy, new Rectangle((int) pipe.X, (int) pipe.Y,
-                    (int) (DriverTexture.Width * _driverScale),
-                    (int) (DriverTexture.Height * _driverScale))))
+                if (Helpers.Collision(floppy, driverRectangle))
                 {
                     Console.WriteLine("down pipe is detected !");
                 }

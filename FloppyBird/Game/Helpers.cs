@@ -6,8 +6,8 @@ namespace FloppyBird.Game
 {
     public static class Helpers
     {
-        private static readonly Vector2 ScreenSize = new Vector2(1280.0f, 720.0f);
-        public static readonly float DefaultXSpeed = 1.8f;
+        // private static readonly Vector2 ScreenSize = new Vector2(1280.0f, 720.0f);
+        public const float DefaultXSpeed = 1.8f;
 
         public enum ScaleObject
         {
@@ -28,10 +28,10 @@ namespace FloppyBird.Game
                 case ScaleObject.Background:
                     return answer;
                 case ScaleObject.Floppy:
-                    answer =  answer / 20;
+                    answer = answer / 20;
                     return answer;
                 case ScaleObject.Driver:
-                    answer = answer / 2;
+                    answer = answer / 3;
                     return answer;
             }
 
