@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,13 +10,11 @@ namespace FloppyBird2.Game
     {
         private readonly Texture2D _driverTexture;
 
-        private readonly List<Rectangle> _listUpperDriver = new();
-        private readonly List<Rectangle> _listDownDriver = new();
+        public readonly List<Rectangle> _listUpperDriver;
+        private readonly List<Rectangle> _listDownDriver;
 
-        private Dictionary<List<Rectangle>, bool> _dictionaryUpperDriver = new();
-
-        private Vector2 _floppyDriverDownPos = new(300, 0f);
-        private Vector2 _floppyDriverUpPos = new(300, 0f);
+        private Vector2 _floppyDriverDownPos;
+        private Vector2 _floppyDriverUpPos;
 
         private float _pipeBetweenPosition;
         private float _driverScale;
@@ -29,10 +26,19 @@ namespace FloppyBird2.Game
             _driverTexture = contentManager.Load<Texture2D>("floppy_driver");
             _graphicsDevice = graphicsDevice;
             _driverScale = GetDriverScale(_graphicsDevice);
+
+            _listUpperDriver = new();
+            _listDownDriver = new();
+
+            _floppyDriverDownPos = new(300.0f, 0.0f);
+            _floppyDriverUpPos = new(300.0f, 0.0f);
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Rectangle floppy)
         {
+            PipeGeneration(floppy);
+            DriverCollision(floppy);
+            DeleteDriver(floppy);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -50,7 +56,9 @@ namespace FloppyBird2.Game
 
         private Rectangle Add_Pipe(int driverPosX, int driverPosY, int driverWidth, int driverHeight)
         {
-            if (driverHeight <= 0) throw new ArgumentOutOfRangeException(nameof(driverHeight));
+            if (driverHeight <= 0)
+                throw new ArgumentOutOfRangeException(nameof(driverHeight));
+
             driverPosX += _graphicsDevice.Adapter.CurrentDisplayMode.Width;
             driverWidth = (int) (driverWidth * _driverScale);
             driverHeight = (int) (driverHeight * _driverScale);
@@ -58,29 +66,19 @@ namespace FloppyBird2.Game
             return new Rectangle(driverPosX, driverPosY, driverWidth, driverHeight);
         }
 
-        public void PipeGeneration(GraphicsDevice graphicsDevice, Rectangle floppy)
+        private void PipeGeneration(Rectangle floppy)
         {
             if (_pipeBetweenPosition > 200)
             {
-                Random random = new Random();
+                Random random = new();
 
-                float targetHeight = random.Next(0, graphicsDevice.Adapter.CurrentDisplayMode.Height / 4);
+                float targetHeight = random.Next(0, _graphicsDevice.Adapter.CurrentDisplayMode.Height / 4);
 
-                _listUpperDriver.Add(Add_Pipe((int) (_floppyDriverDownPos.X += _pipeBetweenPosition),
-                    0, _driverTexture.Width, (int) (_driverTexture.Height + targetHeight)));
-                
-                //maybe bug here
-                _dictionaryUpperDriver.Add(_listUpperDriver, true);
+                _listUpperDriver.Add(Add_Pipe((int) (_floppyDriverDownPos.X += _pipeBetweenPosition), 0, _driverTexture.Width, (int) (_driverTexture.Height + targetHeight)));
 
-                /* SPACE FOR X4 FLOPPYS HEIGHT*/
+                float spaceForFloppy = floppy.Height * 4 + targetHeight + _driverTexture.Height * GetDriverScale(_graphicsDevice);
 
-                float spaceForFloppy = floppy.Height * 4 + targetHeight +
-                                       _driverTexture.Height * GetDriverScale(graphicsDevice);
-
-
-                _listDownDriver.Add(Add_Pipe((int) (_floppyDriverUpPos.X += _pipeBetweenPosition),
-                    (int) spaceForFloppy, _driverTexture.Width, _graphicsDevice.Adapter.CurrentDisplayMode.Height));
-
+                _listDownDriver.Add(Add_Pipe((int) (_floppyDriverUpPos.X += _pipeBetweenPosition), (int) spaceForFloppy, _driverTexture.Width, _graphicsDevice.Adapter.CurrentDisplayMode.Height));
 
                 _pipeBetweenPosition = 0;
             }
@@ -88,17 +86,17 @@ namespace FloppyBird2.Game
             _pipeBetweenPosition += 2;
         }
 
+
         private float GetDriverScale(GraphicsDevice graphicsDevice)
         {
             const Helpers.ScaleObject scale = Helpers.ScaleObject.Driver;
             return _driverScale = Helpers.Scale(graphicsDevice, _driverTexture, scale);
         }
 
-        public void DeleteDriver(Rectangle floppy)
+        private void DeleteDriver(Rectangle floppy)
         {
             foreach (Rectangle rectangle in _listUpperDriver)
             {
-                /* 300 - is start Floppy position*/
                 if (floppy.X <= rectangle.X + rectangle.Width + 300)
                     continue;
 
@@ -108,7 +106,6 @@ namespace FloppyBird2.Game
 
             foreach (Rectangle rectangle in _listDownDriver)
             {
-                /* 300 - is start Floppy position*/
                 if (floppy.X <= rectangle.X + rectangle.Width + 300)
                     continue;
 
@@ -118,7 +115,7 @@ namespace FloppyBird2.Game
         }
 
 
-        public void DriverCollision(Rectangle floppy)
+        private void DriverCollision(Rectangle floppy)
         {
             foreach (Rectangle driverRectangle in _listUpperDriver)
             {
@@ -134,18 +131,6 @@ namespace FloppyBird2.Game
                 {
                     Console.WriteLine("down pipe is detected !");
                 }
-            }
-        }
-
-        private int scoreCounter;
-
-        private void GetScore()
-        {
-            if (_dictionaryUpperDriver.ContainsKey(_listUpperDriver) && _dictionaryUpperDriver.ContainsValue(true))
-            {
-                
-                Text.IncrementCounter(scoreCounter++);
-                
             }
         }
     }

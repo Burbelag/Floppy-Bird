@@ -1,48 +1,60 @@
-using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Vector2 = System.Numerics.Vector2;
 
 namespace FloppyBird2.Game
 {
     public class Text
     {
-        public static SpriteFont ScoreFont;
-        private readonly GraphicsDevice _graphicsDevice;
-        public static Vector2 ScorePosition;
-
-        private static int _counter;
-        public static string ScoreText;
+        private static SpriteFont _scoreFont;
+        private Vector2 _position;
+        public int Score { get; set; }
 
         public Text(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
-            ScoreFont = contentManager.Load<SpriteFont>("score");
-            _graphicsDevice = graphicsDevice;
-            SetScorePosition();
-            ScoreText = SetText();
-        }
-        public void Update(GameTime gameTime)
-        {
-            ScoreText = ("score : " + _counter);
-        }
-        private void SetScorePosition()
-        {
-            ScorePosition.X = _graphicsDevice.Adapter.CurrentDisplayMode.Width -
-                              _graphicsDevice.Adapter.CurrentDisplayMode.Width / 7;
-            ScorePosition.Y = (float) _graphicsDevice.Adapter.CurrentDisplayMode.Height / 90;
-        }
-        
-        /* SET TEXT AT THE INITIALIZATION*/
-        private static string SetText()
-        {
-            return "score:  " + _counter;
+            _scoreFont = contentManager.Load<SpriteFont>("score");
+            _position = new Vector2(0, 0);
         }
 
-        
-        public static void IncrementCounter(int scoreCounter)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            _counter = scoreCounter;
+            spriteBatch.DrawString(_scoreFont, "score: " + Score, _position, Color.White);
+        }
+
+        public void Update(Rectangle floppy, List<Rectangle> listDriver)
+        {
+            IncrementCounter(floppy, listDriver);
+            _oneTime = false;
+            Move();
+        }
+
+        private void Move()
+        {
+            _position.X += Helpers.DefaultXSpeed;
+        }
+
+        public void SetText(SpriteBatch spriteBatch, string text)
+        {
+            spriteBatch.DrawString(_scoreFont, text, _position, Color.Yellow);
+        }
+
+        private Rectangle _tempRectangle;
+        private bool _oneTime;
+
+        private void IncrementCounter(Rectangle floppy, List<Rectangle> driverList)
+        {
+            foreach (Rectangle driver in driverList)
+            {
+                _tempRectangle = new Rectangle(driver.X + driver.Width, 0, (int) Helpers.WidthForCounter, 10000);
+
+                if (Helpers.Collision(new Rectangle(floppy.X, floppy.Y, (int) Helpers.WidthForCounter,
+                    floppy.Height), _tempRectangle) && !_oneTime)
+                {
+                    ++Score;
+                    _oneTime = true;
+                }
+            }
         }
     }
 }

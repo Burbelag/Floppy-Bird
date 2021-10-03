@@ -2,8 +2,7 @@
 using FloppyBird2.Game;
         /*TODO : FIX SCREEN RESOLUTION CHANGES
          *TODO : GAME MENU
-         *TODO : SCORE COUNTER
-         * 
+         *TODO : COUNTER SCALE
          */
 namespace FloppyBird2
 {

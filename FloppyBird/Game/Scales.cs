@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FloppyBird.Game
+namespace FloppyBird2.Game
 {
     public static class Scales
     {

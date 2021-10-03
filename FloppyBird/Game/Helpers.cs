@@ -6,9 +6,9 @@ namespace FloppyBird2.Game
 {
     public static class Helpers
     {
-         private static readonly Vector2 ScreenSize = new Vector2(1280.0f, 720.0f);
-        public const float DefaultXSpeed = 1.8f;
-
+        private static readonly Vector2 ScreenSize = new Vector2(1280.0f, 720.0f);
+        public const float DefaultXSpeed = 2.0f;
+        public const float WidthForCounter = DefaultXSpeed;
         public enum ScaleObject
         {
             Background,
@@ -16,11 +16,10 @@ namespace FloppyBird2.Game
             Driver
         }
 
-        public static float Scale(GraphicsDevice graphicsDevice, Texture2D obj, ScaleObject scaleObject)
+        public static float Scale(GraphicsDevice graphicsDevice, Texture2D texture, ScaleObject scaleObject)
         {
-            float screenResolution = graphicsDevice.Adapter.CurrentDisplayMode.Height ^ 2 /
-                graphicsDevice.Adapter.CurrentDisplayMode.Width ^ 2;
-            float answer = obj.Height ^ 2 / obj.Width;
+            float screenResolution = graphicsDevice.Adapter.CurrentDisplayMode.Height ^ 2 / graphicsDevice.Adapter.CurrentDisplayMode.Width ^ 2;
+            float answer = texture.Height ^ 2 / texture.Width;
 
             answer = screenResolution / answer;
             switch (scaleObject)
@@ -28,14 +27,14 @@ namespace FloppyBird2.Game
                 case ScaleObject.Background:
                     return answer;
                 case ScaleObject.Floppy:
-                    answer = answer / 20;
+                    answer /= 20;
                     return answer;
                 case ScaleObject.Driver:
-                    answer = answer / 3;
+                    answer /= 3;
                     return answer;
+                default:
+                    return 1.0f;
             }
-
-            throw new InvalidOperationException();
         }
 
         public static bool Collision(Rectangle a, Rectangle b)

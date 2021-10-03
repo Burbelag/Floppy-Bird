@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -13,7 +12,7 @@ namespace FloppyBird2.Game
         private SpriteBatch _spriteBatch;
 
         private readonly Playground _playground;
-        private readonly Text _text;
+        private Background _background;
 
         private Vector3 _gameCamera;
         private float _cameraPos;
@@ -21,9 +20,10 @@ namespace FloppyBird2.Game
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferWidth = 1080;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -34,14 +34,13 @@ namespace FloppyBird2.Game
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _playground.LoadContent(Content, GraphicsDevice);
+
+            _background = new Background(Content, GraphicsDevice);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            /* EXIT THE GAME */
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             _gameCamera = new Vector3(_cameraPos -= Helpers.DefaultXSpeed, 0, 0.0f);
@@ -55,27 +54,20 @@ namespace FloppyBird2.Game
         {
             GraphicsDevice.Clear(Color.White);
 
+            /* background */
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
 
-            _spriteBatch.Draw(Background.BackgroundTexture, Vector2.Zero, null, Color.White, 0.0f,
-                Vector2.Zero, Background.BackgroundScale, SpriteEffects.None, 0.0f);
+            _background.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
-                null, null, null, Matrix.CreateTranslation(_gameCamera));
+            /* game itself */
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Matrix.CreateTranslation(_gameCamera));
 
             _playground.Draw(_spriteBatch);
 
             _spriteBatch.End();
 
-
-            /* draw SCORE upon the image*/
-            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
-
-            _spriteBatch.DrawString(Text.ScoreFont, Text.ScoreText, Text.ScorePosition, Color.White);
-
-            _spriteBatch.End();
             base.Draw(gameTime);
         }
     }

@@ -11,7 +11,7 @@ namespace FloppyBird.Game
     {
         private readonly Texture2D _floppyTexture;
         private float _floppyScale;
-        private Vector2 _position;
+        public Vector2 Position;
 
         /* MOVEMENT */
         private readonly float _acceleration = 0.15f;
@@ -29,7 +29,7 @@ namespace FloppyBird.Game
             _floppyTexture = contentManager.Load<Texture2D>("floppy");
             _graphicsDevice = graphicsDevice;
 
-            _position = new Vector2(300.0f, graphicsDevice.Adapter.CurrentDisplayMode.Height / 2);
+            Position = new Vector2(300.0f, graphicsDevice.Adapter.CurrentDisplayMode.Height / 2);
 
             _floppyScale = GetFloppyScale(graphicsDevice);
         }
@@ -44,14 +44,14 @@ namespace FloppyBird.Game
 
         private void FRectangle()
         {
-            FloppyRectangle = new Rectangle((int) _position.X, (int) _position.Y,
+            FloppyRectangle = new Rectangle((int)Position.X, (int)Position.Y,
                 (int) (_floppyTexture.Width * _floppyScale),
                 (int) (_floppyTexture.Height * _floppyScale));
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_floppyTexture, _position, null, Color.White, 0.0f,
+            spriteBatch.Draw(_floppyTexture, Position, null, Color.White, 0.0f,
                 Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
         }
 
@@ -70,13 +70,13 @@ namespace FloppyBird.Game
         private void Move()
         {
             _velocity += _acceleration;
-            _position.Y += _velocity;
-            _position.X += Helpers.DefaultXSpeed;
+            Position.Y += _velocity;
+            Position.X += Helpers.DefaultXSpeed;
         }
 
         private void HeightCollision()
         {
-            if (_position.Y < 0 || _position.Y > _graphicsDevice.Adapter.CurrentDisplayMode.Height)
+            if (Position.Y < 0 || Position.Y > _graphicsDevice.Adapter.CurrentDisplayMode.Height)
                 Console.WriteLine("Height collision");
         }
 
