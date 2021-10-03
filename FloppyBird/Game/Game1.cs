@@ -1,17 +1,19 @@
-﻿using Floppy_Bird.Game;
+﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace FloppyBird.Game
+namespace FloppyBird2.Game
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         private ContentManager _contentManager;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
         private readonly Playground _playground;
+        private readonly Text _text;
 
         private Vector3 _gameCamera;
         private float _cameraPos;
@@ -37,7 +39,7 @@ namespace FloppyBird.Game
         protected override void Update(GameTime gameTime)
         {
             /* EXIT THE GAME */
-            
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -45,6 +47,7 @@ namespace FloppyBird.Game
             _gameCamera = new Vector3(_cameraPos -= Helpers.DefaultXSpeed, 0, 0.0f);
 
             _playground.Update(gameTime);
+            
             base.Update(gameTime);
         }
 
@@ -53,17 +56,24 @@ namespace FloppyBird.Game
             GraphicsDevice.Clear(Color.White);
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
-            
-            
+
             _spriteBatch.Draw(Background.BackgroundTexture, Vector2.Zero, null, Color.White, 0.0f,
                 Vector2.Zero, Background.BackgroundScale, SpriteEffects.None, 0.0f);
-            
+
             _spriteBatch.End();
 
             _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp,
                 null, null, null, Matrix.CreateTranslation(_gameCamera));
 
             _playground.Draw(_spriteBatch);
+
+            _spriteBatch.End();
+
+
+            /* draw SCORE upon the image*/
+            _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
+
+            _spriteBatch.DrawString(Text.ScoreFont, Text.ScoreText, Text.ScorePosition, Color.White);
 
             _spriteBatch.End();
             base.Draw(gameTime);

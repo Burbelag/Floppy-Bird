@@ -1,9 +1,8 @@
-using FloppyBird.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Floppy_Bird.Game
+namespace FloppyBird2.Game
 {
     public class Background
     {

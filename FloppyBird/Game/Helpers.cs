@@ -2,11 +2,11 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FloppyBird.Game
+namespace FloppyBird2.Game
 {
     public static class Helpers
     {
-        // private static readonly Vector2 ScreenSize = new Vector2(1280.0f, 720.0f);
+         private static readonly Vector2 ScreenSize = new Vector2(1280.0f, 720.0f);
         public const float DefaultXSpeed = 1.8f;
 
         public enum ScaleObject

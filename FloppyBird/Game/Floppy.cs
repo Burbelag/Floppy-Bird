@@ -1,4 +1,5 @@
 using System;
+using FloppyBird2.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
