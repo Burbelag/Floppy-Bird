@@ -60,10 +60,7 @@ namespace FloppyBird2.Game
             if (driverHeight <= 0)
                 throw new ArgumentOutOfRangeException(nameof(driverHeight));
 
-            driverPosX += _graphicsDevice.Adapter.CurrentDisplayMode.Width;
-            driverWidth = (int) (driverWidth * _driverScale);
-            driverHeight = (int) (driverHeight * _driverScale);
-
+            driverPosX += _graphicsDevice.Viewport.Bounds.Width;
             return new Rectangle(driverPosX, driverPosY, driverWidth, driverHeight);
         }
 
@@ -73,16 +70,18 @@ namespace FloppyBird2.Game
             {
                 Random random = new();
 
-                float targetHeight = random.Next(_graphicsDevice.Adapter.CurrentDisplayMode.Height / 3,
-                    _graphicsDevice.Adapter.CurrentDisplayMode.Height);
+                float holePosition = random.Next((int) (_graphicsDevice.Viewport.Bounds.Height * 0.20),
+                    (int) (_graphicsDevice.Viewport.Bounds.Height * 0.70));
+                /* hole size with x5 floppy's height*/
+                int holeSize = floppy.Height * 5;
 
                 ListUpperDriver.Add(Add_Pipe((int) (_floppyDriverDownPos.X += _pipeBetweenPosition), 0,
-                    _driverTexture.Width, (int) (targetHeight)));
-
-                float spaceForFloppy = targetHeight + 100;
+                    (int) (_driverTexture.Width * _driverScale), (int) holePosition));
                 
-                _listDownDriver.Add(Add_Pipe((int) (_floppyDriverUpPos.X += _pipeBetweenPosition), (int) spaceForFloppy,
-                    _driverTexture.Width, _graphicsDevice.Adapter.CurrentDisplayMode.Height));
+                _listDownDriver.Add(Add_Pipe((int) (_floppyDriverUpPos.X += _pipeBetweenPosition),
+                    (int) holePosition + holeSize,
+                    (int) (_driverTexture.Width * _driverScale),
+                    _graphicsDevice.Viewport.Bounds.Height - (int) holePosition - holeSize));
 
                 _pipeBetweenPosition = 0;
             }

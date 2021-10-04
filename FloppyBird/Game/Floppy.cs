@@ -29,7 +29,7 @@ namespace FloppyBird.Game
             _floppyTexture = contentManager.Load<Texture2D>("floppy");
             _graphicsDevice = graphicsDevice;
 
-            Position = new Vector2(300.0f, graphicsDevice.Adapter.CurrentDisplayMode.Height / 2);
+            Position = new Vector2(graphicsDevice.Viewport.Width / 4, graphicsDevice.Viewport.Height / 2);
 
             _floppyScale = GetFloppyScale(graphicsDevice);
         }
@@ -61,7 +61,7 @@ namespace FloppyBird.Game
 
             if (_oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space))
             {
-                _velocity = -_floppyTexture.Height / 5;
+                _velocity = -_floppyTexture.Height * _floppyScale / 5;
             }
 
             _oldState = newState;
@@ -76,11 +76,11 @@ namespace FloppyBird.Game
 
         private void HeightCollision()
         {
-            if (Position.Y < 0 || Position.Y > _graphicsDevice.Adapter.CurrentDisplayMode.Height)
+            if (Position.Y < 0 || Position.Y > _graphicsDevice.Viewport.Bounds.Height)
                 Console.WriteLine("Height collision");
         }
 
-        public float GetFloppyScale(GraphicsDevice graphicsDevice)
+        private float GetFloppyScale(GraphicsDevice graphicsDevice)
         {
             const Helpers.ScaleObject scale = Helpers.ScaleObject.Floppy;
             return _floppyScale = Helpers.Scale(graphicsDevice, _floppyTexture, scale);

@@ -7,17 +7,19 @@ namespace FloppyBird2.Game
     public class Background
     {
         private static Texture2D _texture;
-        private float _backgroundScale;
+        private readonly float _backgroundScale;
+
         public Background(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
-            Helpers.ScaleObject scale = Helpers.ScaleObject.Background;
+            const Helpers.ScaleObject scale = Helpers.ScaleObject.Background;
             _texture = contentManager.Load<Texture2D>("background");
             _backgroundScale = Helpers.Scale(graphicsDevice, _texture, scale);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_texture, Vector2.Zero, null, Color.White, 0.0f, Vector2.Zero, _backgroundScale, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(_texture, Vector2.Zero, null, Color.White,
+                0.0f, Vector2.Zero, _backgroundScale, SpriteEffects.None, 0.0f);
         }
     }
 }

@@ -9,7 +9,10 @@ namespace FloppyBird2.Game
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         private ContentManager _contentManager;
-        private readonly GraphicsDeviceManager _graphics;
+
+        private readonly GraphicsDeviceManager _graphicsDeviceManager;
+
+        // private readonly GraphicsDevice _graphics;
         private SpriteBatch _spriteBatch;
 
         private readonly Playground _playground;
@@ -23,10 +26,12 @@ namespace FloppyBird2.Game
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferWidth = 1366;
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.ApplyChanges();
+            _graphicsDeviceManager = new GraphicsDeviceManager(this);
+
+            _graphicsDeviceManager.PreferredBackBufferWidth = 600;
+            _graphicsDeviceManager.PreferredBackBufferHeight = 480;
+
+            _graphicsDeviceManager.ApplyChanges();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -38,7 +43,7 @@ namespace FloppyBird2.Game
         protected override void LoadContent()
         {
             _playground.LoadContent(Content, GraphicsDevice);
-            
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _background = new Background(Content, GraphicsDevice);
         }

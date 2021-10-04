@@ -49,7 +49,7 @@ namespace FloppyBird2.Game
             foreach (Rectangle driver in driverList)
             {
                 _tempRectangle = new Rectangle(driver.X + driver.Width, 0, (int) Helpers.WidthForCounter,
-                    _graphicsDevice.Adapter.CurrentDisplayMode.Height);
+                    _graphicsDevice.Viewport.Bounds.Height);
 
                 if (Helpers.Collision(new Rectangle(floppy.X, floppy.Y, (int) Helpers.WidthForCounter,
                     floppy.Height), _tempRectangle) && !_oneTime)
