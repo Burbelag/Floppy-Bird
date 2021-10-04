@@ -61,7 +61,7 @@ namespace FloppyBird.Game
 
             if (_oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space))
             {
-                _velocity = -5f;
+                _velocity = -_floppyTexture.Height / 5;
             }
 
             _oldState = newState;
@@ -80,9 +80,9 @@ namespace FloppyBird.Game
                 Console.WriteLine("Height collision");
         }
 
-        protected float GetFloppyScale(GraphicsDevice graphicsDevice)
+        public float GetFloppyScale(GraphicsDevice graphicsDevice)
         {
-            Helpers.ScaleObject scale = Helpers.ScaleObject.Floppy;
+            const Helpers.ScaleObject scale = Helpers.ScaleObject.Floppy;
             return _floppyScale = Helpers.Scale(graphicsDevice, _floppyTexture, scale);
         }
     }

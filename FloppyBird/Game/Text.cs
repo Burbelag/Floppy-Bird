@@ -9,12 +9,14 @@ namespace FloppyBird2.Game
     {
         private static SpriteFont _scoreFont;
         private Vector2 _position;
-        public int Score { get; set; }
+        private GraphicsDevice _graphicsDevice;
+        private int Score { get; set; }
 
         public Text(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _scoreFont = contentManager.Load<SpriteFont>("score");
             _position = new Vector2(0, 0);
+            _graphicsDevice = graphicsDevice;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -46,7 +48,8 @@ namespace FloppyBird2.Game
         {
             foreach (Rectangle driver in driverList)
             {
-                _tempRectangle = new Rectangle(driver.X + driver.Width, 0, (int) Helpers.WidthForCounter, 10000);
+                _tempRectangle = new Rectangle(driver.X + driver.Width, 0, (int) Helpers.WidthForCounter,
+                    _graphicsDevice.Adapter.CurrentDisplayMode.Height);
 
                 if (Helpers.Collision(new Rectangle(floppy.X, floppy.Y, (int) Helpers.WidthForCounter,
                     floppy.Height), _tempRectangle) && !_oneTime)
