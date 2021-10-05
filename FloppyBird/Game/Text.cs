@@ -7,13 +7,15 @@ namespace FloppyBird2.Game
 {
     public class Text
     {
+        private Rectangle _tempRectangle;
         private static SpriteFont _scoreFont;
-        private GraphicsDevice _graphicsDevice;
+        private readonly GraphicsDevice _graphicsDevice;
         private Vector2 _position;
-        
+
         private int Score { get; set; }
         private float _scoreScale;
-        
+        private bool _oneTime;
+
         public Text(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _scoreFont = contentManager.Load<SpriteFont>("score");
@@ -24,7 +26,14 @@ namespace FloppyBird2.Game
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_scoreFont, "Score: " + Score, _position, Color.LightSkyBlue, 
+            spriteBatch.DrawString(_scoreFont, "Score: " + Score, _position, Color.LightSkyBlue,
+                0.0f, Vector2.Zero, _scoreScale, SpriteEffects.None, 0.0f);
+        }
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+        {
+            Vector2 position = new ((float) graphicsDevice.Viewport.Bounds.Height / 2,
+                (float) graphicsDevice.Viewport.Bounds.Width / 2);
+            spriteBatch.DrawString(_scoreFont, "Press \"ENTER\" to start", position, Color.LightSkyBlue,
                 0.0f, Vector2.Zero, _scoreScale, SpriteEffects.None, 0.0f);
         }
 
@@ -40,8 +49,6 @@ namespace FloppyBird2.Game
             _position.X += Helpers.DefaultXSpeed;
         }
 
-        private Rectangle _tempRectangle;
-        private bool _oneTime;
 
         private void IncrementCounter(Rectangle floppy, List<Rectangle> driverList)
         {

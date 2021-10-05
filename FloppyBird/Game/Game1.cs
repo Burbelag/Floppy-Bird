@@ -9,15 +9,16 @@ namespace FloppyBird2.Game
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         private ContentManager _contentManager;
-
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
 
         // private readonly GraphicsDevice _graphics;
         private SpriteBatch _spriteBatch;
 
         private readonly Playground _playground;
+
         private Background _background;
         private readonly Floppy _floppy;
+        private Text _text;
 
         private Vector3 _gameCamera;
         private float _cameraPos;
@@ -38,6 +39,7 @@ namespace FloppyBird2.Game
 
             _playground = new Playground();
             _floppy = new Floppy(Content, GraphicsDevice);
+            _text = new Text(Content, GraphicsDevice);
         }
 
         protected override void LoadContent()
@@ -74,10 +76,11 @@ namespace FloppyBird2.Game
         {
             if (Menu)
             {
-                _spriteBatch.Begin();
+                _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp);
 
                 _background.Draw(_spriteBatch);
                 _floppy.Draw(_spriteBatch);
+                _text.Draw(_spriteBatch, GraphicsDevice);
 
                 _spriteBatch.End();
             }

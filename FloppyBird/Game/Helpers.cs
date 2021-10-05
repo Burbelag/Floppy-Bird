@@ -40,6 +40,7 @@ namespace FloppyBird2.Game
                     return 1.0f;
             }
         }
+
         public static float Scale(GraphicsDevice graphicsDevice, SpriteFont font, ScaleObject scaleObject)
         {
             Texture2D fontTexture = font.Texture;
@@ -47,9 +48,8 @@ namespace FloppyBird2.Game
                                      2 / graphicsDevice.Viewport.Bounds.Height ^ 2;
             float answer = fontTexture.Height ^ 2 / fontTexture.Width ^ 2;
 
-            
+
             answer = screenResolution / answer;
-            Console.WriteLine(answer);
             switch (scaleObject)
             {
                 case ScaleObject.ScoreText:
