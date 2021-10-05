@@ -3,6 +3,7 @@ using FloppyBird2.Game;
 
 /* TODO : GAME OVER SCREEN
  * TODO : SOUND
+ * TODO : FIX GAME OVER SCREEN 'SCORE'
  */
 namespace FloppyBird2
 {

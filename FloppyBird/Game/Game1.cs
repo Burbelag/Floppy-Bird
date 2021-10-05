@@ -18,12 +18,14 @@ namespace FloppyBird2.Game
 
         private Background _background;
         private readonly Floppy _floppy;
-        private Text _text;
+        private readonly Text _text;
 
         private Vector3 _gameCamera;
         private float _cameraPos;
 
-        public bool Menu = true;
+        public static bool Menu = true;
+
+        public static bool GameOver = false;
 
         public Game1()
         {
@@ -80,7 +82,16 @@ namespace FloppyBird2.Game
 
                 _background.Draw(_spriteBatch);
                 _floppy.Draw(_spriteBatch);
-                _text.Draw(_spriteBatch, GraphicsDevice);
+                
+                if (GameOver)
+                {
+                    _text.Draw(_spriteBatch, GraphicsDevice, true);
+                }
+                else
+                {
+                    _text.Draw(_spriteBatch, GraphicsDevice, false);
+
+                }
 
                 _spriteBatch.End();
             }

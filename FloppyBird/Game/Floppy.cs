@@ -29,7 +29,8 @@ namespace FloppyBird.Game
             _floppyTexture = contentManager.Load<Texture2D>("floppy");
             _graphicsDevice = graphicsDevice;
 
-            Position = new Vector2(graphicsDevice.Viewport.Width / 4, graphicsDevice.Viewport.Height / 2);
+            Position = new Vector2((float) graphicsDevice.Viewport.Width / 4,
+                (float) graphicsDevice.Viewport.Height / 2);
 
             _floppyScale = GetFloppyScale(graphicsDevice);
         }
@@ -44,7 +45,7 @@ namespace FloppyBird.Game
 
         private void FRectangle()
         {
-            FloppyRectangle = new Rectangle((int)Position.X, (int)Position.Y,
+            FloppyRectangle = new Rectangle((int) Position.X, (int) Position.Y,
                 (int) (_floppyTexture.Width * _floppyScale),
                 (int) (_floppyTexture.Height * _floppyScale));
         }
@@ -77,7 +78,10 @@ namespace FloppyBird.Game
         private void HeightCollision()
         {
             if (Position.Y < 0 || Position.Y > _graphicsDevice.Viewport.Bounds.Height)
-                Console.WriteLine("Height collision");
+            {
+                Game1.Menu = true;
+                Game1.GameOver = true;
+            }
         }
 
         private float GetFloppyScale(GraphicsDevice graphicsDevice)

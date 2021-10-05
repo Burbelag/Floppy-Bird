@@ -14,7 +14,8 @@ namespace FloppyBird2.Game
 
         private int Score { get; set; }
         private float _scoreScale;
-        private bool _oneTime;
+
+        private bool _gameOver = false;
 
         public Text(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
@@ -29,18 +30,28 @@ namespace FloppyBird2.Game
             spriteBatch.DrawString(_scoreFont, "Score: " + Score, _position, Color.LightSkyBlue,
                 0.0f, Vector2.Zero, _scoreScale, SpriteEffects.None, 0.0f);
         }
-        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice)
+
+        public void Draw(SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, bool state)
         {
-            Vector2 position = new ((float) graphicsDevice.Viewport.Bounds.Height / 2,
+            Vector2 position = new((float) graphicsDevice.Viewport.Bounds.Height / 2,
                 (float) graphicsDevice.Viewport.Bounds.Width / 2);
-            spriteBatch.DrawString(_scoreFont, "Press \"ENTER\" to start", position, Color.LightSkyBlue,
-                0.0f, Vector2.Zero, _scoreScale, SpriteEffects.None, 0.0f);
+
+            if (state)
+            {
+                spriteBatch.DrawString(_scoreFont, "Game Over \n your score is \n" + Score, position,
+                    Color.LightSkyBlue,
+                    0.0f, Vector2.Zero, _scoreScale, SpriteEffects.None, 0.0f);
+            }
+            else
+            {
+                spriteBatch.DrawString(_scoreFont, "Press \"ENTER\" to start", position, Color.LightSkyBlue,
+                    0.0f, Vector2.Zero, _scoreScale, SpriteEffects.None, 0.0f);                
+            }
         }
 
         public void Update(Rectangle floppy, List<Rectangle> listDriver)
         {
             IncrementCounter(floppy, listDriver);
-            _oneTime = false;
             Move();
         }
 
@@ -58,10 +69,9 @@ namespace FloppyBird2.Game
                     _graphicsDevice.Viewport.Bounds.Height);
 
                 if (Helpers.Collision(new Rectangle(floppy.X, floppy.Y, (int) Helpers.WidthForCounter,
-                    floppy.Height), _tempRectangle) && !_oneTime)
+                    floppy.Height), _tempRectangle))
                 {
                     ++Score;
-                    _oneTime = true;
                 }
             }
         }

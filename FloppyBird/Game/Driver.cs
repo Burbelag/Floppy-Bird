@@ -124,7 +124,8 @@ namespace FloppyBird2.Game
             {
                 if (Helpers.Collision(floppy, driverRectangle))
                 {
-                    Console.WriteLine("upper pipe is detected !");
+                    Game1.Menu = true;
+                    Game1.GameOver = true;
                 }
             }
 
@@ -132,7 +133,8 @@ namespace FloppyBird2.Game
             {
                 if (Helpers.Collision(floppy, driverRectangle))
                 {
-                    Console.WriteLine("down pipe is detected !");
+                    Game1.Menu = true;
+                    Game1.GameOver = true;
                 }
             }
         }
