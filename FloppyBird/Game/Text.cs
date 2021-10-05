@@ -8,20 +8,24 @@ namespace FloppyBird2.Game
     public class Text
     {
         private static SpriteFont _scoreFont;
-        private Vector2 _position;
         private GraphicsDevice _graphicsDevice;
+        private Vector2 _position;
+        
         private int Score { get; set; }
-
+        private float _scoreScale;
+        
         public Text(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _scoreFont = contentManager.Load<SpriteFont>("score");
             _position = new Vector2(0, 0);
             _graphicsDevice = graphicsDevice;
+            _scoreScale = ScoreScale(graphicsDevice);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(_scoreFont, "score: " + Score, _position, Color.White);
+            spriteBatch.DrawString(_scoreFont, "Score: " + Score, _position, Color.LightSkyBlue, 
+                0.0f, Vector2.Zero, _scoreScale, SpriteEffects.None, 0.0f);
         }
 
         public void Update(Rectangle floppy, List<Rectangle> listDriver)
@@ -34,11 +38,6 @@ namespace FloppyBird2.Game
         private void Move()
         {
             _position.X += Helpers.DefaultXSpeed;
-        }
-
-        public void SetText(SpriteBatch spriteBatch, string text)
-        {
-            spriteBatch.DrawString(_scoreFont, text, _position, Color.Yellow);
         }
 
         private Rectangle _tempRectangle;
@@ -58,6 +57,12 @@ namespace FloppyBird2.Game
                     _oneTime = true;
                 }
             }
+        }
+
+        private float ScoreScale(GraphicsDevice graphicsDevice)
+        {
+            const Helpers.ScaleObject scale = Helpers.ScaleObject.ScoreText;
+            return _scoreScale = Helpers.Scale(graphicsDevice, _scoreFont, scale);
         }
     }
 }

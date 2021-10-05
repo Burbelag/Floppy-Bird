@@ -1,5 +1,8 @@
+using System;
+using System.Drawing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace FloppyBird2.Game
 {
@@ -12,14 +15,15 @@ namespace FloppyBird2.Game
         {
             Background,
             Floppy,
-            Driver
+            Driver,
+            ScoreText
         }
 
         public static float Scale(GraphicsDevice graphicsDevice, Texture2D texture, ScaleObject scaleObject)
         {
             float screenResolution = graphicsDevice.Viewport.Bounds.Height ^
                                      2 / graphicsDevice.Viewport.Bounds.Height ^ 2;
-            float answer = texture.Height ^ 2 / texture.Width ^ 2 ;
+            float answer = texture.Height ^ 2 / texture.Width ^ 2;
 
             answer = screenResolution / answer;
             switch (scaleObject)
@@ -27,11 +31,29 @@ namespace FloppyBird2.Game
                 case ScaleObject.Background:
                     return answer;
                 case ScaleObject.Floppy:
-                    answer /= 20;
-                    return answer;
+                    return answer / 20;
                 case ScaleObject.Driver:
-                    answer /= 3;
-                    return answer;
+                    return answer / 3;
+                case ScaleObject.ScoreText:
+                    return answer / 100;
+                default:
+                    return 1.0f;
+            }
+        }
+        public static float Scale(GraphicsDevice graphicsDevice, SpriteFont font, ScaleObject scaleObject)
+        {
+            Texture2D fontTexture = font.Texture;
+            float screenResolution = graphicsDevice.Viewport.Bounds.Height ^
+                                     2 / graphicsDevice.Viewport.Bounds.Height ^ 2;
+            float answer = fontTexture.Height ^ 2 / fontTexture.Width ^ 2;
+
+            
+            answer = screenResolution / answer;
+            Console.WriteLine(answer);
+            switch (scaleObject)
+            {
+                case ScaleObject.ScoreText:
+                    return answer / 3;
                 default:
                     return 1.0f;
             }
