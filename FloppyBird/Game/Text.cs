@@ -12,10 +12,8 @@ namespace FloppyBird2.Game
         private readonly GraphicsDevice _graphicsDevice;
         private Vector2 _position;
 
-        private int Score { get; set; }
+        private static int Score { get; set; }
         private float _scoreScale;
-
-        private bool _gameOver = false;
 
         public Text(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {

@@ -56,3 +56,21 @@
 /processorParam:TextureFormat=Compressed
 /build:score.spritefont
 
+#begin SFX/jump_1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/jump_1.wav
+
+#begin SFX/jump_2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/jump_2.wav
+
+#begin SFX/jump_3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:SFX/jump_3.wav
+

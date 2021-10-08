@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using FloppyBird.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -77,7 +76,7 @@ namespace FloppyBird2.Game
 
                 ListUpperDriver.Add(Add_Pipe((int) (_floppyDriverDownPos.X += _pipeBetweenPosition), 0,
                     (int) (_driverTexture.Width * _driverScale), (int) holePosition));
-                
+
                 _listDownDriver.Add(Add_Pipe((int) (_floppyDriverUpPos.X += _pipeBetweenPosition),
                     (int) holePosition + holeSize,
                     (int) (_driverTexture.Width * _driverScale),

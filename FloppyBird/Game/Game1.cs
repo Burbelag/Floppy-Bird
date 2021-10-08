@@ -82,7 +82,7 @@ namespace FloppyBird2.Game
 
                 _background.Draw(_spriteBatch);
                 _floppy.Draw(_spriteBatch);
-                
+
                 if (GameOver)
                 {
                     _text.Draw(_spriteBatch, GraphicsDevice, true);
@@ -90,7 +90,6 @@ namespace FloppyBird2.Game
                 else
                 {
                     _text.Draw(_spriteBatch, GraphicsDevice, false);
-
                 }
 
                 _spriteBatch.End();

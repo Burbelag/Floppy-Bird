@@ -10,9 +10,9 @@ namespace FloppyBird2
     public static class Program
     {
         [STAThread]
-        static void Main()
+        private static void Main()
         {
-            using (var game = new Game1())
+            using (Game1 game = new())
                 game.Run();
         }
     }

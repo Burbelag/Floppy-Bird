@@ -1,6 +1,3 @@
-using System;
-using System.Drawing;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
@@ -50,13 +47,12 @@ namespace FloppyBird2.Game
 
 
             answer = screenResolution / answer;
-            switch (scaleObject)
+
+            return scaleObject switch
             {
-                case ScaleObject.ScoreText:
-                    return answer / 3;
-                default:
-                    return 1.0f;
-            }
+                ScaleObject.ScoreText => answer / 3,
+                _ => 1.0f
+            };
         }
 
         public static bool Collision(Rectangle a, Rectangle b)

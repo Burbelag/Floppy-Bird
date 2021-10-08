@@ -1,5 +1,5 @@
-using System;
 using FloppyBird2.Game;
+using FloppyBird2.Game.SFX;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,10 +11,10 @@ namespace FloppyBird.Game
     {
         private readonly Texture2D _floppyTexture;
         private float _floppyScale;
-        public Vector2 Position;
+        private Vector2 _position;
 
         /* MOVEMENT */
-        private readonly float _acceleration = 0.15f;
+        private const float Acceleration = 0.15f;
         private float _velocity;
 
         public Rectangle FloppyRectangle;
@@ -23,13 +23,16 @@ namespace FloppyBird.Game
 
         private KeyboardState _oldState;
 
-
+        private Sound _sound;
+        
         public Floppy(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _floppyTexture = contentManager.Load<Texture2D>("floppy");
             _graphicsDevice = graphicsDevice;
 
-            Position = new Vector2((float) graphicsDevice.Viewport.Width / 4,
+            _sound = new Sound(contentManager);
+            
+            _position = new Vector2((float) graphicsDevice.Viewport.Width / 4,
                 (float) graphicsDevice.Viewport.Height / 2);
 
             _floppyScale = GetFloppyScale(graphicsDevice);
@@ -45,14 +48,14 @@ namespace FloppyBird.Game
 
         private void FRectangle()
         {
-            FloppyRectangle = new Rectangle((int) Position.X, (int) Position.Y,
+            FloppyRectangle = new Rectangle((int) _position.X, (int) _position.Y,
                 (int) (_floppyTexture.Width * _floppyScale),
                 (int) (_floppyTexture.Height * _floppyScale));
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_floppyTexture, Position, null, Color.White, 0.0f,
+            spriteBatch.Draw(_floppyTexture, _position, null, Color.White, 0.0f,
                 Vector2.Zero, _floppyScale, SpriteEffects.None, 0.0f);
         }
 
@@ -63,6 +66,7 @@ namespace FloppyBird.Game
             if (_oldState.IsKeyUp(Keys.Space) && newState.IsKeyDown(Keys.Space))
             {
                 _velocity = -_floppyTexture.Height * _floppyScale / 5;
+                _sound.Play();
             }
 
             _oldState = newState;
@@ -70,14 +74,14 @@ namespace FloppyBird.Game
 
         private void Move()
         {
-            _velocity += _acceleration;
-            Position.Y += _velocity;
-            Position.X += Helpers.DefaultXSpeed;
+            _velocity += Acceleration;
+            _position.Y += _velocity;
+            _position.X += Helpers.DefaultXSpeed;
         }
 
         private void HeightCollision()
         {
-            if (Position.Y < 0 || Position.Y > _graphicsDevice.Viewport.Bounds.Height)
+            if (_position.Y < 0 || _position.Y > _graphicsDevice.Viewport.Bounds.Height)
             {
                 Game1.Menu = true;
                 Game1.GameOver = true;
