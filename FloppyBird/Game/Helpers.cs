@@ -48,11 +48,13 @@ namespace FloppyBird2.Game
 
             answer = screenResolution / answer;
 
-            return scaleObject switch
+            switch (scaleObject)
             {
-                ScaleObject.ScoreText => answer / 3,
-                _ => 1.0f
-            };
+                case ScaleObject.ScoreText:
+                    return answer / 3;
+                default:
+                    return 1.0f;
+            }
         }
 
         public static bool Collision(Rectangle a, Rectangle b)

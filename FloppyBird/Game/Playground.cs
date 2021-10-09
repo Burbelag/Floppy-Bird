@@ -14,6 +14,7 @@ namespace FloppyBird2.Game
         private Text _text;
 
         private Sound _sound;
+
         public void LoadContent(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _floppy = new Floppy(contentManager, graphicsDevice);

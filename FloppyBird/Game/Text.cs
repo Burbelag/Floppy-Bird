@@ -51,6 +51,7 @@ namespace FloppyBird2.Game
         {
             IncrementCounter(floppy, listDriver);
             Move();
+            IsGameOver(Game1.GameOver);
         }
 
         private void Move()
@@ -78,6 +79,14 @@ namespace FloppyBird2.Game
         {
             const Helpers.ScaleObject scale = Helpers.ScaleObject.ScoreText;
             return _scoreScale = Helpers.Scale(graphicsDevice, _scoreFont, scale);
+        }
+
+        private void IsGameOver(bool gameOver)
+        {
+            if (gameOver)
+            {
+                _position = new Vector2(0, 0);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace FloppyBird2.Game
         private readonly Texture2D _driverTexture;
 
         public readonly List<Rectangle> ListUpperDriver;
-        private readonly List<Rectangle> _listDownDriver;
+        private List<Rectangle> _listDownDriver;
 
         private Vector2 _floppyDriverDownPos;
         private Vector2 _floppyDriverUpPos;
@@ -20,6 +20,14 @@ namespace FloppyBird2.Game
         private float _driverScale;
 
         private readonly GraphicsDevice _graphicsDevice;
+
+        public void Update(GameTime gameTime, Rectangle floppy)
+        {
+            PipeGeneration(floppy);
+            DriverCollision(floppy);
+            DeleteDriver(floppy);
+            IsGameOver(Game1.GameOver);
+        }
 
         public Driver(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
@@ -32,13 +40,6 @@ namespace FloppyBird2.Game
 
             _floppyDriverDownPos = new(300.0f, 0.0f);
             _floppyDriverUpPos = new(300.0f, 0.0f);
-        }
-
-        public void Update(GameTime gameTime, Rectangle floppy)
-        {
-            PipeGeneration(floppy);
-            DriverCollision(floppy);
-            DeleteDriver(floppy);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -135,6 +136,18 @@ namespace FloppyBird2.Game
                     Game1.Menu = true;
                     Game1.GameOver = true;
                 }
+            }
+        }
+
+        private void IsGameOver(bool gameOver)
+        {
+            if (gameOver)
+            {
+                ListUpperDriver.Clear();
+                _listDownDriver.Clear();
+
+                _floppyDriverDownPos = new(300.0f, 0.0f);
+                _floppyDriverUpPos = new(300.0f, 0.0f);
             }
         }
     }

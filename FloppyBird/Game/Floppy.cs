@@ -24,14 +24,14 @@ namespace FloppyBird.Game
         private KeyboardState _oldState;
 
         private Sound _sound;
-        
+
         public Floppy(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
             _floppyTexture = contentManager.Load<Texture2D>("floppy");
             _graphicsDevice = graphicsDevice;
 
             _sound = new Sound(contentManager);
-            
+
             _position = new Vector2((float) graphicsDevice.Viewport.Width / 4,
                 (float) graphicsDevice.Viewport.Height / 2);
 
@@ -42,6 +42,7 @@ namespace FloppyBird.Game
         {
             FRectangle();
             HeightCollision();
+            IsGameOver(Game1.GameOver);
             Jump();
             Move();
         }
@@ -92,6 +93,15 @@ namespace FloppyBird.Game
         {
             const Helpers.ScaleObject scale = Helpers.ScaleObject.Floppy;
             return _floppyScale = Helpers.Scale(graphicsDevice, _floppyTexture, scale);
+        }
+
+        private void IsGameOver(bool gameOver)
+        {
+            if (gameOver)
+            {
+                _position.X = (float) _graphicsDevice.Viewport.Bounds.Width / 4;
+                _position.Y = (float) _graphicsDevice.Viewport.Bounds.Height / 2;
+            }
         }
     }
 }

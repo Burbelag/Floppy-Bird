@@ -1,4 +1,5 @@
-﻿using FloppyBird.Game;
+﻿using System;
+using FloppyBird.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,6 @@ namespace FloppyBird2.Game
         private ContentManager _contentManager;
         private readonly GraphicsDeviceManager _graphicsDeviceManager;
 
-        // private readonly GraphicsDevice _graphics;
         private SpriteBatch _spriteBatch;
 
         private readonly Playground _playground;
@@ -19,13 +19,13 @@ namespace FloppyBird2.Game
         private Background _background;
         private readonly Floppy _floppy;
         private readonly Text _text;
-
+        
         private Vector3 _gameCamera;
         private float _cameraPos;
 
         public static bool Menu = true;
 
-        public static bool GameOver = false;
+        public static bool GameOver;
 
         public Game1()
         {
@@ -62,7 +62,12 @@ namespace FloppyBird2.Game
             {
                 KeyboardState state = Keyboard.GetState();
 
-                if (state.IsKeyDown(Keys.Space)) Menu = false;
+                if (state.IsKeyDown(Keys.Space))
+                {
+                    _cameraPos = 0;
+                    Menu = false;
+                    GameOver = false;
+                }
             }
             else
             {
