@@ -12,7 +12,7 @@ namespace FloppyBird2.Game
         private readonly GraphicsDevice _graphicsDevice;
         private Vector2 _position;
 
-        private static int Score { get; set; }
+        public static int Score { get; set; }
         private float _scoreScale;
 
         public Text(ContentManager contentManager, GraphicsDevice graphicsDevice)

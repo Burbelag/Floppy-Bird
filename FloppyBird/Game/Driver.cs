@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FloppyBird.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,22 +12,24 @@ namespace FloppyBird2.Game
         private readonly Texture2D _driverTexture;
 
         public readonly List<Rectangle> ListUpperDriver;
-        private List<Rectangle> _listDownDriver;
+        private readonly List<Rectangle> _listDownDriver;
 
         private Vector2 _floppyDriverDownPos;
         private Vector2 _floppyDriverUpPos;
 
         private float _pipeBetweenPosition;
         private float _driverScale;
-
+        public  static bool DriverReload;
+        
         private readonly GraphicsDevice _graphicsDevice;
 
         public void Update(GameTime gameTime, Rectangle floppy)
         {
+            DriverReload = false;
             PipeGeneration(floppy);
             DriverCollision(floppy);
-            DeleteDriver(floppy);
             IsGameOver(Game1.GameOver);
+            DeleteDriver(floppy);
         }
 
         public Driver(ContentManager contentManager, GraphicsDevice graphicsDevice)
@@ -35,11 +38,11 @@ namespace FloppyBird2.Game
             _graphicsDevice = graphicsDevice;
             _driverScale = GetDriverScale(_graphicsDevice);
 
-            ListUpperDriver = new();
-            _listDownDriver = new();
+            ListUpperDriver = new List<Rectangle>();
+            _listDownDriver = new List<Rectangle>();
 
-            _floppyDriverDownPos = new(300.0f, 0.0f);
-            _floppyDriverUpPos = new(300.0f, 0.0f);
+            _floppyDriverDownPos = new Vector2(300.0f, 0.0f);
+            _floppyDriverUpPos = new Vector2(300.0f, 0.0f);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -126,13 +129,15 @@ namespace FloppyBird2.Game
                 {
                     Game1.Menu = true;
                     Game1.GameOver = true;
+                    DriverReload = true;
                 }
             }
 
             foreach (Rectangle driverRectangle in _listDownDriver)
             {
-                if (Helpers.Collision(floppy, driverRectangle))
+                if (Helpers.Collision(floppy, driverRectangle) || Floppy.FloppyReload)
                 {
+                    DriverReload = true;
                     Game1.Menu = true;
                     Game1.GameOver = true;
                 }
@@ -141,14 +146,17 @@ namespace FloppyBird2.Game
 
         private void IsGameOver(bool gameOver)
         {
-            if (gameOver)
+            if (gameOver || Floppy.FloppyReload)
             {
                 ListUpperDriver.Clear();
                 _listDownDriver.Clear();
 
-                _floppyDriverDownPos = new(300.0f, 0.0f);
-                _floppyDriverUpPos = new(300.0f, 0.0f);
+                _floppyDriverDownPos = new Vector2(300.0f, 0.0f);
+                _floppyDriverUpPos = new Vector2(300.0f, 0.0f);
+
+                DriverReload = true;
             }
+
         }
     }
 }

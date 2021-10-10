@@ -64,6 +64,7 @@ namespace FloppyBird2.Game
 
                 if (state.IsKeyDown(Keys.Space))
                 {
+                    Text.Score = 0;
                     _cameraPos = 0;
                     Menu = false;
                     GameOver = false;
@@ -72,7 +73,6 @@ namespace FloppyBird2.Game
             else
             {
                 _gameCamera = new Vector3(_cameraPos -= Helpers.DefaultXSpeed, 0, 0.0f);
-
                 _playground.Update(gameTime);
             }
 

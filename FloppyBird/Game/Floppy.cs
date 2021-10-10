@@ -1,3 +1,4 @@
+using System;
 using FloppyBird2.Game;
 using FloppyBird2.Game.SFX;
 using Microsoft.Xna.Framework;
@@ -16,6 +17,7 @@ namespace FloppyBird.Game
         /* MOVEMENT */
         private const float Acceleration = 0.15f;
         private float _velocity;
+        public static bool FloppyReload;
 
         public Rectangle FloppyRectangle;
 
@@ -23,7 +25,7 @@ namespace FloppyBird.Game
 
         private KeyboardState _oldState;
 
-        private Sound _sound;
+        private readonly Sound _sound;
 
         public Floppy(ContentManager contentManager, GraphicsDevice graphicsDevice)
         {
@@ -40,11 +42,14 @@ namespace FloppyBird.Game
 
         public void Update(GameTime gameTime)
         {
+            FloppyReload = false;
             FRectangle();
             HeightCollision();
             IsGameOver(Game1.GameOver);
             Jump();
             Move();
+            
+            Console.WriteLine(_position);
         }
 
         private void FRectangle()
@@ -97,11 +102,16 @@ namespace FloppyBird.Game
 
         private void IsGameOver(bool gameOver)
         {
-            if (gameOver)
+            if (gameOver || Driver.DriverReload)
             {
+                Console.WriteLine("!!!!!!!!!!!!!!!!!");
                 _position.X = (float) _graphicsDevice.Viewport.Bounds.Width / 4;
                 _position.Y = (float) _graphicsDevice.Viewport.Bounds.Height / 2;
+                FloppyReload = true;
             }
+
+            FloppyReload = false;
+            return;
         }
     }
 }
